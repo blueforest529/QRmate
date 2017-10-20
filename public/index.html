@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <title></title>
+<script src="https://www.gstatic.com/firebasejs/4.5.2/firebase.js"></script>
+    <style>
+    .star-input>.input,
+    .star-input>.input>label:hover,
+    .star-input>.input>input:focus+label,
+    .star-input>.input>input:checked+label{display: inline-block;vertical-align:middle;background:url('img/grade_img.png')no-repeat;}
+    .star-input{display:inline-block; white-space:nowrap;width:225px;height:40px;padding:25px;line-height:30px;}
+    .star-input>.input{display:inline-block;width:150px;background-size:150px;height:28px;white-space:nowrap;overflow:hidden;position: relative;}
+    .star-input>.input>input{position:absolute;width:1px;height:1px;opacity:0;}
+    star-input>.input.focus{outline:1px dotted #ddd;}
+    .star-input>.input>label{width:30px;height:0;padding:28px 0 0 0;overflow: hidden;float:left;cursor: pointer;position: absolute;top: 0;left: 0;}
+    .star-input>.input>label:hover,
+    .star-input>.input>input:focus+label,
+    .star-input>.input>input:checked+label{background-size: 150px;background-position: 0 bottom;}
+    .star-input>.input>label:hover~label{background-image: none;}
+    .star-input>.input>label[for="p1"]{width:30px;z-index:5;}
+    .star-input>.input>label[for="p2"]{width:60px;z-index:4;}
+    .star-input>.input>label[for="p3"]{width:90px;z-index:3;}
+    .star-input>.input>label[for="p4"]{width:120px;z-index:2;}
+    .star-input>.input>label[for="p5"]{width:150px;z-index:1;}
+    .star-input>output{display:inline-block;width:60px; font-size:18px;text-align:right; vertical-align:middle;}
+    input[type=text] {
+    width: 130px;
+    box-sizing: border-box;
+    border: 2px solid #FDC74D;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: white;
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    padding: 10px 10px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+    }
+    input[type=text]:focus {
+        width: 100%;
+    }
+      .color{background-color: #FDC74D;}
+      .a{
+        background:#FFDA8F;
+        color:#fff;
+        border:none;
+        position:relative;
+        height:40px;
+        font-size:1em;
+        padding:0.1em;
+        cursor:pointer;
+        transition:800ms ease all;
+        outline:none;
+      }
+      .a:hover{
+        background:#fff;
+        color:#9B6300;
+      }
+      .a:before,.a:after{
+        content:'';
+        position:absolute;
+        top:0;
+        right:0;
+        height:1px;
+        width:0;
+        background: #FFDA8F;
+        transition:400ms ease all;
+      }
+      .a:after{
+        right:inherit;
+        top:inherit;
+        left:0;
+        bottom:0;
+      }
+      .a:hover:before,.a:hover:after{
+        width:100%;
+        transition:800ms ease all;
+      }
+    </style>
+    <script type="text/javascript">
+      // Initialize Firebase
+      var s;
+      var config = {
+        apiKey: "AIzaSyAz3QpTrYZR0lWtqAzRzjbA01grcdSgw8A",
+        authDomain: "qrcode-239f0.firebaseapp.com",
+        databaseURL: "https://qrcode-239f0.firebaseio.com",
+        projectId: "qrcode-239f0",
+        storageBucket: "qrcode-239f0.appspot.com",
+        messagingSenderId: "1002112074455"
+      };
+      firebase.initializeApp(config);
+      function check(score) {
+          s = score;
+      }
+      function addComment(){
+        var comment = document.getElementById('comment').value;
+        var database = firebase.database();
+        database.ref("fact").set({
+          "comment":comment,
+          "score":s
+        });
+      }
+      function openWin(){
+          window.open("https://qrcode-239f0.firebaseapp.com/result.html", "다른사람들의 평가");
+      }
+
+      </script>
+  </head>
+  <body>
+    <center>
+        <td><img src="img/mirimscore.png" alt="" width="300" height="300"></td>
+    <form>
+    <span class="star-input">
+    	<span class="input">
+        	<input type="radio" name="score" value="1" id="p1" onclick="check(this.value)">
+        	<label for="p1">1</label>
+        	<input type="radio" name="score" value="2" id="p2"onclick="check(this.value)">
+        	<label for="p2">2</label>
+        	<input type="radio" name="score" value="3" id="p3"onclick="check(this.value)">
+        	<label for="p3">3</label>
+        	<input type="radio" name="score" value="4" id="p4"onclick="check(this.value)">
+        	<label for="p4">4</label>
+        	<input type="radio" name="score" value="5" id="p5"onclick="check(this.value)">
+        	<label for="p5">5</label>
+      	</span>
+    </span>
+  </form>
+  <br><br><input type="text" name="comment" id="comment" placeholder="한줄평 남기기"><br>
+    <br><input type="submit" onclick="addComment()" value="  제  출  " class="a"><br><br>
+    <input type="submit " value="작품에 대한 다른 의견들은?" onclick="openWin()" class="a"></a>
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/star.js"></script>
+  </body>
+</html>
