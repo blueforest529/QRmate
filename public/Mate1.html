@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://www.gstatic.com/firebasejs/4.6.1/firebase.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="ms.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <title></title>
+    <script src="https://www.gstatic.com/firebasejs/4.5.2/firebase.js"></script>
+    <script type="text/javascript">
+      var getParam = function(key){
+        var _parammap = {};
+        document.location.search.replace(/\??(?:([^=]+)=([^&]*)&?)/g, function () {
+        function decode(s) {
+           return decodeURIComponent(s.split("+").join(" "));
+        }
+          _parammap[decode(arguments[1])] = decode(arguments[2]);
+        });
+         return _parammap[key];
+      };
+      var id = getParam("num");
+
+      // Initialize Firebase
+      var s;
+      var count;
+      var sumNum;
+      //var id = 1; //가져올 id 값
+      var config = {
+        apiKey: "AIzaSyAz3QpTrYZR0lWtqAzRzjbA01grcdSgw8A",
+        authDomain: "qrcode-239f0.firebaseapp.com",
+        databaseURL: "https://qrcode-239f0.firebaseio.com",
+        projectId: "qrcode-239f0",
+        storageBucket: "qrcode-239f0.appspot.com",
+        messagingSenderId: "1002112074455"
+      };
+      firebase.initializeApp(config);
+      var database = firebase.database();
+      var reviewRef = database.ref("Exhibition/"+id);
+
+      // cnt&avg 가져오는 함수
+      reviewRef.on('value', function(snapshot){
+        var result = snapshot.val();
+        count = result.cnt;
+        sumNum = result.sum;
+      });
+
+      function check(score) {
+          s = score;
+      }
+
+      function addReview(){
+          var comment = document.getElementById('comment').value;
+          var name = document.getElementById('name').value;
+          var count2 = count+ 1;
+
+          alert("리뷰를 남겨주셔서 감사합니다!"+count2);
+          //리뷰 저장
+          var newReviewRef = reviewRef.child(count2).set({
+                "name":name,
+                "comment":comment,
+                "score": s
+          });
+          //sum 업데이트에 사용할 스코어
+          //sum 업데이트에 사용할 스코어
+            var newSum = (sumNum*1) + (s*1);
+            alert(newSum);
+
+          //플래그 설정
+          var flagRef = database.ref("Flag");
+          var newFlagRef = flagRef.set({
+                  "flag": 1
+          });
+
+          //cnt 업데이트
+          var cnt = reviewRef.update({
+            "cnt" : count2
+          });
+
+          //sum 업데이트
+          var sum = reviewRef.update({
+            "sum" : newSum
+          })
+          location.replace("https://qrcode-239f0.firebaseapp.com/result.html");
+      }
+      </script>
+  </head>
+  <body>
+    <div class="container-fluid bg-1 text-center">
+      <h3 class="margin">안녕하세염</h3>
+      <img src="img/mirim.jpg" class="img-responsive img-circle margin"style="display:inline"  width="200" height="200">
+      <h3>미림소프트웨어쇼(두번째페이지) 입니당</h3>
+    </div><br><br><br><br>
+
+    <center>
+    <table width="100%" border="0">
+    <tr align=center>
+      <td><form><span class="star-input"><span class="input">
+        	<input type="radio" name="score" value="1" id="p1" onclick="check(this.value)">
+        	<label for="p1">1</label>
+        	<input type="radio" name="score" value="2" id="p2"onclick="check(this.value)">
+        	<label for="p2">2</label>
+        	<input type="radio" name="score" value="3" id="p3"onclick="check(this.value)">
+        	<label for="p3">3</label>
+        	<input type="radio" name="score" value="4" id="p4"onclick="check(this.value)">
+        	<label for="p4">4</label>
+        	<input type="radio" name="score" value="5" id="p5"onclick="check(this.value)">
+        	<label for="p5">5</label>
+      </span></span></form></td>
+    </tr>
+
+    <tr align=center style="font:10pt '나눔고딕'">
+      <td>별점을 매겨주세요<br><br><br><br><br></td>
+    </tr>
+
+    <tr>
+      <td><input class="form-control" type="text" name="name" id="ex1" id="name" placeholder="성함이 무엇인가요?"><br><br><br></td>
+    </tr>
+
+    <tr>
+      <td><input class="form-control" type="text" name="comment" id="comment" placeholder="평가를 남겨주세요"><br><br><br></td>
+    </tr>
+
+    <tr>
+      <td><p><input type="submit" onclick="addReview()" value="  제  출  " class="a">전시자에게 보내기</input></p><br><br><br></td>
+    </tr>
+</table>
+
+  <br><input type="text" name="name" id="name" placeholder="닉네임"><br><br>
+  <br><br><input type="text" name="comment" id="comment" placeholder="한줄평 남기기"><br>
+  <br><input type="submit" onclick="addReview()" value="  제  출  " class="a"><br><br>
+  </body>
+</html>
